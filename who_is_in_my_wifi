@@ -1,0 +1,14 @@
+import subprocess
+
+#this for loop depends on how long you are willing to wait.
+for i in range(100):   #look for up to 10 devices
+    command=['ping', '-n', '1', '172.20.130.0'+str(i)]   #icrement the device names
+    subprocess.call(command)   #ping the devices to update data before  "arp -a'
+
+arpa = subprocess.check_output(("arp", "-a")).decode("ascii") #call 'arp -a' and get results
+
+#I count lines that contain 172.20, but not ['192.168.0.1 ','192.168.0.255']
+#because those are the router and broadcast gateway. Note that the machine 
+#you are running the code from will get counted because it will be in the 
+#first line "Interface: 192.168.0.10 --- 0x4" in my case
+n_devices=len([x for x in arpa.split('\n') if '172.20' in x and  all(y not in x for y in ['172.20.130.1 ','172.20.130.255']) ])
