@@ -1,0 +1,25 @@
+import socket
+
+MSG_LENGHT = 1024
+PORT = 6060
+FORMAT = 'utf-8'
+SERVER = "172.20.129.212"
+ADDR = (SERVER, PORT)
+
+print("[STARTING] Client is starting...")
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(ADDR)
+while True:
+    msg = input('[SEND MESSAGE] Type [Exit].....:')
+    if msg == 'exit':
+        client.send("[שם המכשיר]:" + msg.encode(FORMAT))
+        client.close()
+        print('[CLOSED CONNECTION]')
+        break
+    client.send(msg.encode(FORMAT))
+    msg = client.recv(MSG_LENGHT).decode(FORMAT)
+    if msg == 'exit':
+        client.close()
+        print('[CLOSED CONNECTION]')
+        break
+    print(msg)
